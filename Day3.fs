@@ -1,4 +1,6 @@
-﻿open System
+﻿module day3
+
+open System
 
 let testInput = "xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))"
 
@@ -14,6 +16,7 @@ let mulLinesCharsLines = mulLines |> List.map Seq.toList
 let isDigit (c: char) = c >= '0' && c <= '9'
 let isComma (c: char) = c = ','
 let isClosingBracket (c: char) = c = ')'
+
 
 let rec fishOutMul (firstNum: bool) (firstNumAcc: char list) (secondNumAcc: char list) (input: char list) =
     match input with
@@ -34,7 +37,9 @@ let sum text =
 
 let result = sum mulLinesCharsLines
 printfn "%A" result
+
 //pt2
+
 let rec filterOutDonts (enabled: bool) (acc: char list) (input: char list) =
     match input with
     |'d'::'o'::'n'::'\''::'t'::'('::')'::xs -> filterOutDonts false acc xs
@@ -42,6 +47,7 @@ let rec filterOutDonts (enabled: bool) (acc: char list) (input: char list) =
     |x::xs when enabled -> filterOutDonts enabled (x::acc) xs
     |x::xs -> filterOutDonts enabled acc xs
     |[] -> List.rev acc
+
 
 let filteredOutCharList = filterOutDonts true [] (Seq.toList input)
 let filteredOutInput = filteredOutCharList |> List.toArray |> String
