@@ -1,4 +1,6 @@
-﻿open System
+﻿module day4
+
+open System
 
 let actualInput = "XMASMXMXMAXSMMSSSSXSXMASMSAXMAXAXXMASASMSXSSSSSMMXSXMASASMSMMXSASASXXXXSMSXSMSXMASXXMASMMASXMXSXMSMMMMMSXXMASASMSSSSSMMSMMSSMSMSSMXSAMMSMMMM
 XXMSAMXSXMMSASXAAAAXMMMMAMXSMSMMSSMMMASXMAAAAASASMAAAAMAXXAMMAAXSASMMSAMAAAMASAXAMMSMMMMSAAXSAXASAMMMSAAXSAMXAAAAMMAAAAAAMMAAXMASAAMAMAMXMAM
@@ -187,6 +189,7 @@ let rec CollectDiagonalsDownLeft (start:coordinate) =
             yield! CollectDiagonalsDownLeft {x=start.x-1; y=start.y+1}
     }
 
+// Convert coordinate sequences to strings
 let diagonalsDownRight = 
     allTopLeftCoordinates 
     |> List.map (fun coord -> 
@@ -254,7 +257,6 @@ let isXmas (x:int) (y:int) =
         getChar (x+1) (y+1) = 'S' && 
         getChar (x-1) (y-1) = 'M' && 
         getChar (x+1) (y-1) = 'M'
-
 let indexToCoord index = 
     let x = index % width
     let y = index / width
