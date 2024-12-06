@@ -1,4 +1,6 @@
-﻿open System
+﻿module day6
+
+open System
 
 
 let input = "....#.....
@@ -227,12 +229,15 @@ let countVisited (grid: Grid) =
             if grid.[x,y].visited then
                 count <- count + 1
     count
+
 walk marker grid
 let count = countVisited grid
 
 printfn "%A" count
 
+
 //pt2
+
 let rec isLoop (marker: Marker) (grid: Grid) =
     if outOfBounds marker then
         false
@@ -265,10 +270,12 @@ let resetGrid (grid: Grid) =
             grid.[i,j].visitedDirections.Clear()
     
 
+
 let rec countPossibleLoops (grid: Grid) (X: int) (Y: int) (sum: int) =
     let nextX, nextY = getNextXY X Y
     if X = -1 then
         sum
+
     else
         //reset grid
         resetGrid grid
