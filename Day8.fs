@@ -1,4 +1,6 @@
-﻿open System
+﻿module day8
+
+open System
 
 let input = "............
 ........0...
