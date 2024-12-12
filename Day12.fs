@@ -1,4 +1,6 @@
-﻿open System
+﻿module Day12
+
+open System
 
 let input = "RRRRIICCFF
 RRRRIICCCF
