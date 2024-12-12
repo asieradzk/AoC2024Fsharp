@@ -172,7 +172,7 @@ let parseInput (input: string) =
     )
     grid
 
-let grid = parseInput input
+let grid = parseInput actualInput
 
 type Region = {
     tiles: Tile list
@@ -255,3 +255,69 @@ let total = regions |> List.sumBy computeValue
 printfn "Total: %d" total
 
 //pt2
+
+
+// Directions for adjacent cells
+let directions = [(1,0); (-1,0); (0,1); (0,-1)]
+
+// Is this a vertical side?
+let isVerticalSide dir = dir = 2 || dir = 3
+
+// Check for gaps between coordinates
+let hasGap (a, b) = abs(a - b) > 1
+
+// Count sides by finding gaps
+let countSides sides =
+    // Group by direction (vertical/horizontal) and position
+    let sideToRowOrCol (dirIndex: int, pos: int * int) =
+        if isVerticalSide dirIndex then 
+            (dirIndex, snd pos)  // Use y coordinate for vertical sides
+        else 
+            (dirIndex, fst pos)  // Use x coordinate for horizontal sides
+    
+    let coordForSide (dirIndex: int) (pos: int * int) =
+        if isVerticalSide dirIndex then 
+            fst pos  // Use x coordinate for vertical sides 
+        else 
+            snd pos  // Use y coordinate for horizontal sides
+
+    sides
+    |> List.groupBy sideToRowOrCol
+    |> List.sumBy (fun (groupKey, positions) ->
+        let coords = positions |> List.map (fun (dir, pos) -> coordForSide dir pos)
+        coords 
+        |> List.sort 
+        |> List.pairwise 
+        |> List.sumBy (fun pair -> if hasGap pair then 1 else 0)
+        |> (+) 1
+    )
+
+let computeValuePart2 (region: Region) =
+    if region.tiles.Length = 1 then
+        4 * region.tiles.Length  // Special case for single tiles
+    else
+        let coords = 
+            region.tiles 
+            |> List.map (fun t -> (t.x, t.y))
+            |> Set.ofList
+            
+        let sides = 
+            coords 
+            |> Set.toList
+            |> List.collect (fun pos ->
+                directions |> List.indexed |> List.choose (fun (i, (dx, dy)) ->
+                    let newPos = (fst pos + dx, snd pos + dy)
+                    if not (Set.contains newPos coords) then 
+                        Some (i, pos)
+                    else None
+                )
+            )
+            
+        let sideCount = countSides sides
+        let area = region.tiles.Length
+        
+        printfn "Region %c: Area=%d Sides=%d Price=%d" region.plant area sideCount (area * sideCount)
+        area * sideCount
+
+let totalPart2 = regions |> List.sumBy computeValuePart2
+printfn "Part 2 Total: %d" totalPart2
